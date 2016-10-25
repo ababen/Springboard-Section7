@@ -17,7 +17,9 @@
 # set the working directory
 # setwd("~/Desktop/Rstatistics")
 # setwd("C:/Users/dataclass/Desktop/Rstatistics")
-setwd("~/Springboard-Section7/Linear Regression")
+
+setwd("~/R/Springboard-Section7/Linear Regression")
+
 ##   You might also start by listing the files in your working directory
 
 getwd() # where am I?
@@ -149,6 +151,12 @@ plot(energy.mod)
 ##   repeat steps 1-3. Is this model significantly better than the model
 ##   with /metro/ as the only predictor?
 
+energy.mod2 <- lm(energy ~ metro + density + green, data=states.data)
+summary(energy.mod2)
+
+sts.exc.energy2 <- subset(states.data, select = c("energy", "metro", "density", "green"))
+plot(sts.exc.energy)
+
 ## Interactions and factors
 ## ══════════════════════════
 
@@ -163,6 +171,8 @@ plot(energy.mod)
   #Add the interaction to the model
 sat.expense.by.percent <- lm(csat ~ expense*income,
                              data=states.data) 
+
+
 #Show the results
   coef(summary(sat.expense.by.percent)) # show regression coefficients table
 
@@ -213,5 +223,21 @@ coef(summary(lm(csat ~ C(region, contr.helmert),
 ##   1. Add on to the regression equation that you created in exercise 1 by
 ##      generating an interaction term and testing the interaction.
 
+energy.metro <- lm(energy ~ metro*green, data=states.data)
+coef(summary(energy.metro))
+
+
 ##   2. Try adding region to the model. Are there significant differences
 ##      across the four regions?
+
+str(states.data$region)
+states.data$region <- factor(states.data$region)
+
+#Add region to the model
+
+energy.region <- lm(energy ~ region, data=states.data) 
+
+#Show the results
+
+coef(summary(energy.region)) # show regression coefficients table
+anova(energy.region) # show ANOVA table
