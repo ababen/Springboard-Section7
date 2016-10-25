@@ -17,7 +17,7 @@
 # set the working directory
 # setwd("~/Desktop/Rstatistics")
 # setwd("C:/Users/dataclass/Desktop/Rstatistics")
-
+setwd("~/Springboard-Section7/Linear Regression")
 ##   You might also start by listing the files in your working directory
 
 getwd() # where am I?
@@ -94,7 +94,7 @@ methods(class = class(sat.mod))[1:9]
 ##   • Use function methods to get more information about the fit
 
 confint(sat.mod)
-# hist(residuals(sat.mod))
+hist(residuals(sat.mod))
 
 ## Linear Regression Assumptions
 ## ─────────────────────────────────
@@ -129,9 +129,21 @@ coef(summary(sat.voting.mod))
 ##   Use the /states.rds/ data set. Fit a model predicting energy consumed
 ##   per capita (energy) from the percentage of residents living in
 ##   metropolitan areas (metro). Be sure to
+
+sts.exc.energy <- subset(states.data, select = c("energy", "metro"))
+
 ##   1. Examine/plot the data before fitting the model
+
+plot(sts.exc.energy)
+# Fit our regression model
+energy.mod <- lm(energy ~ metro, # regression formula
+              data=states.data) # data set
+
 ##   2. Print and interpret the model `summary'
+summary(energy.mod) # show regression coefficients table
+
 ##   3. `plot' the model to look for deviations from modeling assumptions
+plot(energy.mod)
 
 ##   Select one or more additional predictors to add to your model and
 ##   repeat steps 1-3. Is this model significantly better than the model
