@@ -42,6 +42,7 @@ NH11$hypev <- factor(NH11$hypev, levels=c("2 No", "1 Yes"))
 # run our regression model
 hyp.out <- glm(hypev~age_p+sex+sleep+bmi,
               data=NH11, family="binomial")
+summary(hyp.out)
 coef(summary(hyp.out))
 
 ## Logistic regression coefficients
@@ -84,12 +85,13 @@ cbind(predDat, predict(hyp.out, type = "response",
 ##   having been diagnosed with hypertension, while and 63 year old female
 ##   has a 48% probability of having been diagnosed.
 
-## Packages for  computing and graphing predicted values
+## Packages for computing and graphing predicted values
 ## ─────────────────────────────────────────────────────────
 
 ##   Instead of doing all this ourselves, we can use the effects package to
 ##   compute quantities of interest for us (cf. the Zelig package).
 
+install.packages("effects")
 library(effects)
 plot(allEffects(hyp.out))
 
@@ -97,6 +99,19 @@ plot(allEffects(hyp.out))
 ## ───────────────────────────────────
 
 ##   Use the NH11 data set that we loaded earlier.
+
+install.packages("caTools")
+library(caTools)
+set.seed(88)
+table(NH11$everwrk)
+split = sample.split(NH11$everwrk, SplitRatio = 0.1552703)
+worked_yes = subset(NH11$everwrk, split == "1 Yes")
+worked_no = subset(NH11$everwrk, split == "2 No")
+summary(split)
+nrow(worked_yes)
+nrow(worked_no)
+
+1887/12153
 
 ##   1. Use glm to conduct a logistic regression to predict ever worked
 ##      (everwrk) using age (age_p) and marital status (r_maritl).
@@ -106,3 +121,5 @@ plot(allEffects(hyp.out))
 ##   Note that the data is not perfectly clean and ready to be modeled. You
 ##   will need to clean up at least some of the variables before fitting
 ##   the model.
+
+summary(NH11)
