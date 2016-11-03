@@ -25,7 +25,7 @@
 ##   Load the National Health Interview Survey data:
 
 setwd("~/R/Springboard-Section7")
-NH11 <- readRDS("Logistic Regression/dataSets/NatHealth2011.rds")
+NH11 <- readRDS("dataSets/NatHealth2011.rds")
 labs <- attributes(NH11)$labels
 
 ##   [CDC website] http://www.cdc.gov/nchs/nhis.htm
@@ -41,8 +41,8 @@ levels(NH11$hypev) # check levels of hypev
 # collapse all missing values to NA
 NH11$hypev <- factor(NH11$hypev, levels=c("2 No", "1 Yes"))
 # run our regression model
-hyp.out <- glm(hypev~age_p+sex+sleep+bmi, data=NH11, family="binomial")
-summary(hyp.out)
+hyp.out <- glm(hypev~age_p+sex+sleep+bmi,
+              data=NH11, family="binomial")
 coef(summary(hyp.out))
 
 ## Logistic regression coefficients
@@ -85,71 +85,30 @@ cbind(predDat, predict(hyp.out, type = "response",
 ##   having been diagnosed with hypertension, while and 63 year old female
 ##   has a 48% probability of having been diagnosed.
 
-## Packages for computing and graphing predicted values
+## Packages for  computing and graphing predicted values
 ## ─────────────────────────────────────────────────────────
 
 ##   Instead of doing all this ourselves, we can use the effects package to
 ##   compute quantities of interest for us (cf. the Zelig package).
 
-install.packages("effects")
 library(effects)
 plot(allEffects(hyp.out))
 
 ## Exercise: logistic regression
 ## ───────────────────────────────────
-
+library(dplyr)
 ##   Use the NH11 data set that we loaded earlier.
-
-install.packages("caTools")
-install.packages("mice")
-library(caTools)
-library(mice)
-set.seed(88)
-table(NH11$everwrk)
-sum(is.na(NH11$everwrk))
-
-# Checking the table yields 12,153 Yes and 1887 No and 18,974 NA
-# I will fill in the NAs proportionally 15.53% No
-NH11$everwrk <- factor(NH11$everwrk, levels=c("2 No", "1 Yes"))
-ds <- subset(NH11, select = c("everwrk","age_p","r_maritl"))
-ds_na <- subset(is.na(ds$everwrk))
-
-
-# split = sample.split(NH11$everwrk, SplitRatio = 0.1552703)
-# everwrk_yes = subset(ds, split == "1 Yes")
-# everwrk_no = subset(ds, split == "2 No")
-# summary(split)
+tbl_df(ds)
+ds <- NH11
+ds1 <- ds %>% select(one_of(c("everwrk","age_p","r_maritl")))
+ds1 %>% filter(is.na(everwrk))
+View(ds1)
 
 ##   1. Use glm to conduct a logistic regression to predict ever worked
 ##      (everwrk) using age (age_p) and marital status (r_maritl).
-
-everwrk.age <- glm(everwrk ~ age_p + r_maritl, data=ds, family="binomial")
-summary(everwrk.age)
-coef(summary(everwrk.age))
-
-everwrk.age.tab <- coef(summary(everwrk.age))
-everwrk.age.tab[, "Estimate"] <- exp(coef(everwrk.age))
-everwrk.age.tab
-
 ##   2. Predict the probability of working for each level of marital
 ##      status.
-
-# Create a dataset with predictors set at desired levels
-
-predDat <- with(NH11,
-                expand.grid(age_p = c(33, 63),
-                            sex = "2 Female",
-                            bmi = mean(bmi, na.rm = TRUE),
-                            sleep = mean(sleep, na.rm = TRUE)))
-
-# predict hypertension at those levels
-
-cbind(predDat, predict(hyp.out, type = "response",
-                       se.fit = TRUE, interval="confidence",
-                       newdata = predDat))
 
 ##   Note that the data is not perfectly clean and ready to be modeled. You
 ##   will need to clean up at least some of the variables before fitting
 ##   the model.
-
-summary(NH11)

@@ -16,9 +16,15 @@ Train = subset(stevens, spl==TRUE)
 Test = subset(stevens, spl==FALSE)
 
 # Install rpart library
+<<<<<<< HEAD
 # install.packages("rpart")
 library(rpart)
 # install.packages("rpart.plot")
+=======
+install.packages("rpart")
+library(rpart)
+install.packages("rpart.plot")
+>>>>>>> e44a1bf3f7fa373980abc1a6ffd424b926c1b230
 library(rpart.plot)
 
 # CART model
