@@ -3,6 +3,7 @@
 # Video 2
 
 # Read in data
+setwd("~Springboard-Section7/Logistic Regression")
 polling = read.csv("PollingData.csv")
 str(polling)
 table(polling$Year)
