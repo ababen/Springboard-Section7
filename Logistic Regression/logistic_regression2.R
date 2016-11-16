@@ -97,17 +97,35 @@ plot(allEffects(hyp.out))
 ## Exercise: logistic regression
 ## ───────────────────────────────────
 library(dplyr)
+
 ##   Use the NH11 data set that we loaded earlier.
 tbl_df(ds)
 ds <- NH11
-ds1 <- ds %>% select(one_of(c("everwrk","age_p","r_maritl")))
-ds1 %>% filter(is.na(everwrk))
-View(ds1)
+
+## Using dplyr instead of subset() for fun. 
+## ever.worked <- subset(NH11, select = c("everwrk","age_p","r_maritl"))
+
+ever.worked <- ds %>% select(one_of(c("everwrk","age_p","r_maritl"))) 
+
+## Looking at only NA
+ever.worked %>% filter(is.na(everwrk))
+
+## Counting NA rows
+nrow(ever.worked %>% filter(is.na(everwrk)))
 
 ##   1. Use glm to conduct a logistic regression to predict ever worked
 ##      (everwrk) using age (age_p) and marital status (r_maritl).
+
+ever.worked.model <- glm(everwrk ~ age_p + r_maritl, data = ever.worked, family = "binomial")
+
+summary(ever.worked.model)
+
 ##   2. Predict the probability of working for each level of marital
 ##      status.
+
+library(effects)
+
+plot(Effect("r_maritl", ever.worked.model))
 
 ##   Note that the data is not perfectly clean and ready to be modeled. You
 ##   will need to clean up at least some of the variables before fitting
