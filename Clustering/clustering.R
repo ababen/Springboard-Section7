@@ -4,7 +4,7 @@
 
 # Exercise 0: Install these packages if you don't have them already
 
-#  install.packages(c("cluster", "rattle","NbClust"))
+install.packages(c("cluster", "rattle","NbClust"))
 
 # Now load the data and look at the first few rows
 data(wine, package="rattle")
@@ -35,7 +35,7 @@ wssplot <- function(data, nc=15, seed=1234){
 	                        ylab="Within groups sum of squares")
 	   }
 
-wssplot(df)
+wssplot(data)
 
 # Exercise 2:
 #   * How many clusters does this method suggest?
@@ -56,7 +56,6 @@ barplot(table(nc$Best.n[1,]),
 # Exercise 3: How many clusters does this method suggest?
 wineVector = as.vector(data)
 distance = dist(wineVector, method = "euclidean")
-str(distance)
 k = 3
 set.seed(1234)
 
@@ -72,15 +71,11 @@ fit.km <- kmeans(wineVector, centers = k, iter.max = 1000)
 # compares to the actual wine types in wine$Type. Would you consider this a good
 # clustering?
 
-cross = table(wine$Type, fit.km$cluster)
-cross
-library(flexclust)
-randIndex(cross)
+
 
 # Exercise 6:
-# * Visualize these clusters using  function clusplot() from the cluster library
+# * Visualize these clusters using function clusplot() from the cluster library
 # * Would you consider this a good clustering?
 
 library(cluster)
-wineMatrix = as.matrix(cross)
-clusplot(cross)
+clusplot(as.matrix(fit.km$cluster))
