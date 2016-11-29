@@ -64,18 +64,19 @@ set.seed(1234)
 # into a variable fit.km
 
 fit.km <- kmeans(wineVector, centers = k, iter.max = 1000)
-
+wineClusters = fit.km$cluster
+dim(wineClusters) = c(nrow(wineVector), ncol(wineVector))
 # Now we want to evaluate how well this clustering does.
 
 # Exercise 5: using the table() function, show how the clusters in fit.km$clusters
 # compares to the actual wine types in wine$Type. Would you consider this a good
 # clustering?
 
-
+table(wineClusters)
 
 # Exercise 6:
 # * Visualize these clusters using function clusplot() from the cluster library
 # * Would you consider this a good clustering?
 
 library(cluster)
-clusplot(as.matrix(fit.km$cluster))
+clusplot(as.matrix(wineClusters), wineVector)
